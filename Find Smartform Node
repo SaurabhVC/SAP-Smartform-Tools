@@ -1,0 +1,154 @@
+*&---------------------------------------------------------------------*
+*& Report  ZTEST
+*&
+*&---------------------------------------------------------------------*
+*&
+*&
+*&---------------------------------------------------------------------*
+REPORT ZTEST1.
+
+INITIALIZATION.
+
+TYPES :
+BEGIN OF lty_outtab,
+  match type string,
+  line type string,
+  node type string,
+  form type string,
+  end OF lty_outtab.
+
+DATA :
+      outtab TYPE TABLE OF lty_outtab,
+      outstr  TYPE lty_outtab.
+
+DATA :
+      LV_CHK_START TYPE CHAR1,
+      LV_CHK_END TYPE CHAR1.
+
+DATA :
+      prg_tab  TYPE TABLE OF string,
+      prg_row  TYPE string,
+      prg_row_1 TYPE string,
+      prg_row_2 TYPE string,
+      prg_row_3 TYPE string,
+      prg_row_4 TYPE string,
+      prg_row_5 TYPE string,
+      prg_row_6 TYPE string,
+      prg_row_7 TYPE string,
+      prg_row_8 TYPE string,
+      prg_row_9 TYPE string,
+      lv_index TYPE int4,
+      lv_index_1 TYPE int4,
+      lv_index_2 TYPE int4,
+      lv_index_3 TYPE int4,
+      lv_index_4 TYPE int4,
+      lv_index_5 TYPE int4,
+      lv_index_6 TYPE int4,
+      lv_index_7 TYPE int4,
+      lv_index_8 TYPE int4,
+      lv_index_9 TYPE int4,
+      lv_flag_tmp1  TYPE char1.
+
+PARAMETERS : prog TYPE char30.
+PARAMETERS : line TYPE string.
+PARAMETERS : selec TYPE string.
+PARAMETERS : EXIT AS CHECKBOX.
+PARAMETERS : LOOP AS CHECKBOX.
+
+START-OF-SELECTION.
+
+read REPORT prog INTO prg_tab.
+
+
+LOOP AT prg_tab INTO prg_row.
+lv_index = sy-tabix.
+lv_index_1 = sy-tabix.
+lv_index_2 = sy-tabix.
+lv_index_3 = SY-TABIX.
+lv_index_4 = SY-TABIX.
+lv_index_5 = SY-TABIX.
+lv_index_6 = SY-TABIX.
+lv_index_7 = SY-TABIX.
+lv_index_8 = SY-TABIX.
+lv_index_9 = SY-TABIX.
+LV_INDEX_4 = LV_INDEX_4 - 1.
+LV_INDEX_5 = LV_INDEX_5 + 1.
+LV_INDEX_6 = LV_INDEX_6 - 2.
+LV_INDEX_7 = LV_INDEX_7 + 2.
+LV_INDEX_8 = LV_INDEX_8 + 3.
+LV_INDEX_9 = LV_INDEX_9 - 3.
+*lv_index_4 = SY-TABIX.
+READ TABLE PRG_TAB INTO prg_row_4 INDEX LV_INDEX_4.
+READ TABLE PRG_TAB INTO prg_row_5 INDEX LV_INDEX_5.
+READ TABLE PRG_TAB INTO prg_row_6 INDEX LV_INDEX_6.
+READ TABLE PRG_TAB INTO prg_row_7 INDEX LV_INDEX_7.
+READ TABLE PRG_TAB INTO prg_row_8 INDEX LV_INDEX_8.
+READ TABLE PRG_TAB INTO prg_row_9 INDEX LV_INDEX_9.
+
+*READ TABLE prg_tab INTO prg_row_1 INDEX LV_INDEX.
+*IF prg_row cs line.
+*lv_index_1 = lv_index - 5.
+*READ TABLE prg_tab INTO prg_row_2 INDEX LV_INDEX_1.
+
+IF prg_row cs selec AND LINE is INITIAL.
+
+
+DO.
+lv_index_2 = lv_index_2 - 1.
+REad TABLE prg_tab INTO prg_row_3 INDEX lv_index_2.
+IF prg_row_3 cs 'LOOP'.
+LV_CHK_START = 'x'.
+ENDIF.
+
+IF prg_row_3 cs 'EXIT'.
+LV_CHK_END = 'x'.
+ENDIF.
+
+IF prg_row_3 cs 'LOOP' AND LV_CHK_START IS NOT INITIAL AND LOOP IS NOT INITIAL.
+NEW-LINE.
+WRITE: 'LOOP' COLOR COL_HEADING.
+NEW-LINE.
+CLEAR : LV_CHK_START, LV_CHK_END.
+ENDIF.
+
+IF prg_row_3 cs 'ENDLOOP' AND LV_CHK_START IS NOT INITIAL AND LV_CHK_END IS NOT INITIAL AND EXIT IS NOT INITIAL.
+NEW-LINE.
+WRITE: 'EXIT' COLOR COL_NEGATIVE.
+NEW-LINE.
+CLEAR : LV_CHK_START, LV_CHK_END.
+ENDIF.
+IF  prg_row_3 cs 'FORM %'.
+outstr-MATCH = prog.
+outstr-LINE = lv_index_2.
+outstr-FORM = prg_row_3.
+lv_index_2 = lv_index_2 - 3.
+REad TABLE prg_tab INTO prg_row_3 INDEX lv_index_2.
+outstr-NODE = prg_row_3.
+append outstr TO outtab.
+*WRITE : outstr-FORM.
+NEW-LINE.
+WRITE : outstr-NODE.
+NEW-LINE.
+WRITE : prg_row_9 COLOR COL_HEADING.
+NEW-LINE.
+WRITE : prg_row_6 COLOR COL_HEADING.
+NEW-LINE.
+WRITE : prg_row_4 COLOR COL_HEADING.
+NEW-LINE.
+WRITE : prg_row COLOR COL_KEY.
+NEW-LINE.
+WRITE : prg_row_5 COLOR COL_HEADING.
+NEW-LINE.
+WRITE : prg_row_7 COLOR COL_HEADING.
+NEW-LINE.
+WRITE : prg_row_8 COLOR COL_HEADING.
+NEW-LINE.
+CLEAR : lv_index_4.
+CLEAR : lv_index_5.
+ULINE.
+NEW-LINE.
+exit.
+ENDIF.
+ENDDO.
+ENDIF.
+ENDLOOP.
